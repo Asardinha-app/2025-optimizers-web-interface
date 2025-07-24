@@ -1,0 +1,6 @@
+# MLB Optimizer Dependencies
+
+pandas
+ortools
+numpy
+requests

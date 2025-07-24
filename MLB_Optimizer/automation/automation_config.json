@@ -1,0 +1,10 @@
+{
+  "platform": "macos",
+  "setup_date": "2025-07-17T19:45:15.255782",
+  "update_schedule": "Weekly (Monday 9:00 AM)",
+  "log_directory": "/Users/adamsardinha/PycharmProjects/2025 Optimizers/MLB Optimizer/logs",
+  "scripts": {
+    "auto_update": "/Users/adamsardinha/PycharmProjects/2025 Optimizers/MLB Optimizer/auto_update.py",
+    "monitor": "/Users/adamsardinha/PycharmProjects/2025 Optimizers/MLB Optimizer/monitor_automation.py"
+  }
+}

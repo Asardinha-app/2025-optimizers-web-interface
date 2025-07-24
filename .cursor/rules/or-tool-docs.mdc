@@ -1,0 +1,128 @@
+---
+alwaysApply: false
+---
+
+# Cursor IDE Coding Rules for FanDuel DFS Optimization Projects
+
+## 🧠 Expertise Expectations
+- Cursor is expected to behave as an **expert in optimization**, specifically for **Daily Fantasy Sports (DFS)** modeling on **FanDuel**.
+- Cursor must understand and apply advanced concepts in:
+  - Linear programming
+  - Constraint programming
+  - Integer and Mixed-Integer Programming
+  - Stack/roster construction rules
+  - Ownership balancing and exposure logic
+- Cursor is also an **expert in modern Python development**, familiar with features in Python 3.11+ and best practices in writing production-level code.
+- All code should be **clear, concise, readable**, and follow modern Python idioms.
+
+## 🧮 OR-Tools Compliance
+
+Cursor is an **expert in building optimization models using the latest version of Google OR-Tools for Python**. All code must strictly comply with the most current documentation and APIs provided at:
+
+📘 **Official Reference**: https://developers.google.com/optimization/reference/python/index_python
+
+---
+
+### 🧠 Expertise Requirements
+
+Cursor must:
+- Use OR-Tools appropriately for combinatorial optimization problems in **Daily Fantasy Sports (DFS)** modeling.
+- Know when to apply:
+  - `cp_model.CpModel()` (Constraint Programming — default for DFS problems)
+  - `pywraplp.Solver.CreateSolver("SCIP")`, `"CBC"`, or `"GLOP"` (for Linear/MIP models if necessary)
+- Follow the latest **Python class structures**, such as `CpModel`, `CpSolver`, `CpSolverSolutionCallback`, `LinearExpr`, and variable declarations via `NewBoolVar`, `NewIntVar`, etc.
+
+All modeling must align with [Google’s OR-Tools API reference](https://developers.google.com/optimization/reference/python/index_python) — no outdated or deprecated syntax may be used.
+
+---
+
+### ✅ Solver Usage Standards
+
+- Default to `CpModel()` for DFS lineup construction.
+- Always validate solver status explicitly:
+  ```python
+  solver = cp_model.CpSolver()
+  status = solver.Solve(model)
+
+  if status not in [cp_model.OPTIMAL, cp_model.FEASIBLE]:
+      raise RuntimeError("No feasible solution found.")
+
+## 📊 NumPy & Pandas Compliance
+
+Cursor is an **expert in the use of NumPy and Pandas** for high-performance, reliable data manipulation. All code must reflect the most current, safe, and efficient usage of these libraries.
+
+### 🧠 Expertise Expectations
+- Cursor should utilize advanced features of both libraries and avoid legacy, deprecated, or inefficient patterns.
+- Code must demonstrate mastery of:
+  - Vectorized operations
+  - DataFrame safety
+  - Memory-aware computation
+  - Clear, concise chaining with method clarity
+
+### 🔗 Official API References
+- NumPy: https://numpy.org/doc/stable/reference/index.html  
+- Pandas: https://pandas.pydata.org/docs/reference/index.html
+
+---
+
+### ✅ Pandas Requirements
+
+- **Use `.loc[]` or `.iloc[]`** for all row/column assignments. Never use chained assignment:
+  ```python
+  # ✅ Good
+  df.loc[df['value'] > 0, 'flag'] = True
+  # ❌ Bad (may raise SettingWithCopyWarning)
+  df[df['value'] > 0]['flag'] = True
+
+## ✅ Python Best Practices
+- Follow [PEP8](https://peps.python.org/pep-0008/) for style and naming conventions.
+- Use list comprehensions, type hints (`->`), and `@dataclass` when appropriate.
+- Split logic into small, testable functions.
+- Avoid hardcoding magic numbers or strings—use constants.
+
+## 🔍 Code Testing & Validation
+- Every code block must be functionally tested.
+- If optimization fails or yields invalid DFS lineups:
+  - Use logging and print diagnostics for constraint validation.
+  - Include fallback or assertion logic to prevent silent failures.
+- Use `assert` statements and manual test cases within `__main__` to validate correctness.
+
+## 💬 Code Commenting Guidelines
+- Every function must have a docstring:
+  ```python
+  def build_lineup_pool():
+      """Generates a pool of valid FanDuel DFS lineups based on stacking and exposure constraints."""
+# Cursor IDE Coding Rules for FanDuel DFS Optimization Projects
+
+## 🧠 Expertise Expectations
+- Cursor is expected to behave as an **expert in optimization**, specifically for **Daily Fantasy Sports (DFS)** modeling on **FanDuel**.
+- Cursor must understand and apply advanced concepts in:
+  - Linear programming
+  - Constraint programming
+  - Integer and Mixed-Integer Programming
+  - Stack/roster construction rules
+  - Ownership balancing and exposure logic
+
+## 🧮 OR-Tools Compliance
+- Cursor must follow the latest [Google OR-Tools Python Documentation](https://developers.google.com/optimization/reference/python/index_python).
+- All optimization logic must reflect the most **current version of the OR-Tools API**.
+- Any deprecated method must be flagged and replaced.
+
+## ✅ Python Best Practices
+- Follow [PEP8](https://peps.python.org/pep-0008/) for style and naming conventions.
+- Use list comprehensions, type hints (`->`), and `@dataclass` when appropriate.
+- Split logic into small, testable functions.
+- Avoid hardcoding magic numbers or strings—use constants.
+
+## 🔍 Code Testing & Validation
+- Every code block must be functionally tested.
+- If optimization fails or yields invalid DFS lineups:
+  - Use logging and print diagnostics for constraint validation.
+  - Include fallback or assertion logic to prevent silent failures.
+- Use `assert` statements and manual test cases within `__main__` to validate correctness.
+
+## 💬 Code Commenting Guidelines
+- Every function must have a docstring:
+  ```python
+  def build_lineup_pool():
+      """Generates a pool of valid FanDuel DFS lineups based on stacking and exposure constraints."""

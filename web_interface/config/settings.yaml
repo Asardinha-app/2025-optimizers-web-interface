@@ -1,0 +1,170 @@
+# Web Interface Configuration Settings
+# This file contains all configuration settings for the DFS Optimizers Web Interface
+
+# Application Settings
+app:
+  name: "DFS Optimizers Web Interface"
+  version: "1.0.0"
+  description: "Unified web interface for all DFS optimizers"
+  debug: false
+  log_level: "INFO"
+  
+# UI/UX Settings
+ui:
+  theme: "dark"
+  primary_color: "#0f3460"
+  secondary_color: "#e94560"
+  background_color: "#1a1a2e"
+  text_color: "#f1f1f1"
+  accent_color: "#4ade80"
+  warning_color: "#f59e0b"
+  error_color: "#ef4444"
+  
+  # Layout Settings
+  layout:
+    sidebar_width: 300
+    main_padding: 20
+    max_width: 1200
+    
+  # Component Settings
+  components:
+    show_progress_bars: true
+    show_status_messages: true
+    enable_animations: true
+    auto_refresh_interval: 30  # seconds
+    
+# File Upload Settings
+file_upload:
+  max_file_size: 50  # MB
+  allowed_extensions: [".csv", ".xlsx", ".xls"]
+  auto_detect_encoding: true
+  preview_rows: 10
+  
+  # Validation Settings
+  validation:
+    require_headers: true
+    min_rows: 1
+    max_rows: 10000
+    
+# Sports Configuration
+sports:
+  mlb:
+    name: "MLB"
+    display_name: "Major League Baseball"
+    enabled: true
+    required_columns: ["Name", "Position", "Team", "Salary", "Projection"]
+    optional_columns: ["Opponent", "Game_Time", "Weather", "Ballpark"]
+    max_players: 9
+    salary_cap: 50000
+    
+  nfl:
+    name: "NFL"
+    display_name: "National Football League"
+    enabled: true
+    required_columns: ["Name", "Position", "Team", "Salary", "Projection"]
+    optional_columns: ["Opponent", "Game_Time", "Weather", "Stadium"]
+    max_players: 9
+    salary_cap: 60000
+    
+  nba:
+    name: "NBA"
+    display_name: "National Basketball Association"
+    enabled: true
+    required_columns: ["Name", "Position", "Team", "Salary", "Projection"]
+    optional_columns: ["Opponent", "Game_Time", "Venue"]
+    max_players: 8
+    salary_cap: 60000
+    
+  nhl:
+    name: "NHL"
+    display_name: "National Hockey League"
+    enabled: true
+    required_columns: ["Name", "Position", "Team", "Salary", "Projection"]
+    optional_columns: ["Opponent", "Game_Time", "Arena"]
+    max_players: 6
+    salary_cap: 55000
+    
+  pga:
+    name: "PGA"
+    display_name: "Professional Golfers Association"
+    enabled: true
+    required_columns: ["Name", "Salary", "Projection"]
+    optional_columns: ["Tournament", "Course", "Weather"]
+    max_players: 6
+    salary_cap: 50000
+    
+  wnba:
+    name: "WNBA"
+    display_name: "Women's National Basketball Association"
+    enabled: true
+    required_columns: ["Name", "Position", "Team", "Salary", "Projection"]
+    optional_columns: ["Opponent", "Game_Time", "Venue"]
+    max_players: 8
+    salary_cap: 50000
+
+# Optimizer Settings
+optimizers:
+  default_algorithm: "or_tools"
+  max_optimization_time: 300  # seconds
+  max_iterations: 1000
+  
+  # OR-Tools Settings
+  or_tools:
+    solver_timeout: 300
+    enable_logging: false
+    parallel_solving: true
+    
+  # Greedy Algorithm Settings
+  greedy:
+    max_attempts: 100
+    random_seed: 42
+    
+# Data Processing Settings
+data_processing:
+  encoding_detection: true
+  default_encoding: "utf-8"
+  handle_missing_values: true
+  data_cleaning: true
+  
+  # CSV Processing
+  csv:
+    delimiter: ","
+    quote_char: '"'
+    skip_empty_lines: true
+    
+  # Excel Processing
+  excel:
+    sheet_name: 0
+    header_row: 0
+    
+# Error Handling Settings
+error_handling:
+  show_detailed_errors: false
+  log_errors: true
+  max_error_log_size: 10  # MB
+  
+# Logging Settings
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_path: "logs/web_interface.log"
+  max_file_size: 10  # MB
+  backup_count: 5
+  
+# Performance Settings
+performance:
+  enable_caching: true
+  cache_ttl: 3600  # seconds
+  max_memory_usage: 512  # MB
+  
+# Security Settings
+security:
+  max_file_size: 50  # MB
+  allowed_file_types: ["csv", "xlsx", "xls"]
+  validate_file_content: true
+  
+# Development Settings
+development:
+  debug_mode: false
+  hot_reload: true
+  show_debug_info: false 

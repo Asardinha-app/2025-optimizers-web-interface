@@ -1,0 +1,419 @@
+# Streamlit Best Practices for 2025 Optimizers Web Interface
+
+## 🎯 Project Overview
+This project uses Streamlit to create a unified web interface for DFS lineup optimization across multiple sports (MLB, NFL, NBA, NHL, PGA, WNBA, CFB).
+
+## 📚 Core Streamlit Concepts
+
+### Page Configuration
+```python
+import streamlit as st
+
+# Always set page config at the very top
+st.set_page_config(
+    page_title="2025 Optimizers",
+    page_icon="⚾",
+    layout="wide",  # Use wide layout for data-heavy apps
+    initial_sidebar_state="expanded"
+)
+```
+
+### Session State Management
+```python
+# Initialize session state
+if 'data' not in st.session_state:
+    st.session_state.data = None
+if 'optimizer' not in st.session_state:
+    st.session_state.optimizer = None
+
+# Use session state for persistent data
+st.session_state.data = uploaded_data
+```
+
+### File Upload Best Practices
+```python
+# File upload with validation
+uploaded_file = st.file_uploader(
+    "Upload your data file (CSV)",
+    type=['csv'],
+    help="Upload a CSV file with player data",
+    key="data_upload"
+)
+
+if uploaded_file is not None:
+    try:
+        df = pd.read_csv(uploaded_file)
+        st.success(f"✅ File uploaded successfully! {len(df)} players loaded.")
+    except Exception as e:
+        st.error(f"❌ Error reading file: {str(e)}")
+```
+
+## 🎨 Dark Theme Implementation
+
+### Custom CSS for Dark Theme
+```python
+st.markdown("""
+<style>
+    .main {
+        background-color: #1a1a2e;
+        color: #f1f1f1;
+    }
+    .stApp {
+        background-color: #1a1a2e;
+    }
+    .css-1d391kg {
+        background-color: #16213e;
+    }
+    .stButton > button {
+        background-color: #0f3460;
+        color: #f1f1f1;
+        border: 1px solid #e94560;
+    }
+    .stButton > button:hover {
+        background-color: #e94560;
+        color: #f1f1f1;
+    }
+    .stDataFrame {
+        background-color: #16213e;
+    }
+    .stMetric {
+        background-color: #16213e;
+    }
+</style>
+""", unsafe_allow_html=True)
+```
+
+### Color Palette
+- **Primary Background**: #1a1a2e
+- **Secondary Background**: #16213e
+- **Accent Blue**: #0f3460
+- **Accent Orange**: #e94560
+- **Text Primary**: #f1f1f1
+- **Text Secondary**: #cccccc
+- **Success**: #4ade80
+- **Warning**: #f59e0b
+- **Error**: #ef4444
+
+## 🏗️ Project Structure Guidelines
+
+### File Organization
+```
+web_interface/
+├── frontend/
+│   ├── main.py              # Main app entry point
+│   ├── pages/               # Multi-page interface
+│   │   ├── mlb_page.py
+│   │   ├── nfl_page.py
+│   │   └── ...
+│   ├── components/          # Reusable UI components
+│   │   ├── file_upload.py
+│   │   ├── results_display.py
+│   │   └── ...
+│   ├── utils/              # Frontend utilities
+│   │   ├── file_handler.py
+│   │   ├── validation.py
+│   │   └── ...
+│   └── assets/             # CSS, images, etc.
+├── backend/                 # FastAPI backend (future)
+└── shared/                  # Shared code
+```
+
+### Component Design Pattern
+```python
+# components/file_upload.py
+import streamlit as st
+import pandas as pd
+
+def render_file_upload():
+    """Reusable file upload component"""
+    uploaded_file = st.file_uploader(
+        "Upload your data file (CSV)",
+        type=['csv'],
+        help="Upload a CSV file with player data"
+    )
+    
+    if uploaded_file is not None:
+        return pd.read_csv(uploaded_file)
+    return None
+
+# main.py
+from components.file_upload import render_file_upload
+
+def main():
+    data = render_file_upload()
+    if data is not None:
+        st.success(f"✅ File uploaded successfully!")
+```
+
+## 📊 Data Display Best Practices
+
+### DataFrames
+```python
+# Show data with proper styling
+st.dataframe(
+    df.head(),
+    use_container_width=True,
+    hide_index=True
+)
+
+# For large datasets, use pagination
+if len(df) > 1000:
+    st.warning("⚠️ Large dataset detected. Showing first 1000 rows.")
+    st.dataframe(df.head(1000), use_container_width=True)
+else:
+    st.dataframe(df, use_container_width=True)
+```
+
+### Metrics and KPIs
+```python
+# Use columns for metrics
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.metric("Total Players", len(df))
+with col2:
+    st.metric("Teams", df['Team'].nunique())
+with col3:
+    st.metric("Avg Salary", f"${df['Salary'].mean():,.0f}")
+with col4:
+    st.metric("Avg Projection", f"{df['Projection'].mean():.1f}")
+```
+
+### Progress Indicators
+```python
+# For long-running operations
+with st.spinner("🔄 Running optimization..."):
+    # Your optimization code here
+    time.sleep(2)  # Simulate processing
+    st.success("✅ Optimization complete!")
+```
+
+## 🔄 State Management
+
+### Session State Best Practices
+```python
+# Initialize all session state variables at the top
+def initialize_session_state():
+    if 'data' not in st.session_state:
+        st.session_state.data = None
+    if 'optimizer' not in st.session_state:
+        st.session_state.optimizer = None
+    if 'results' not in st.session_state:
+        st.session_state.results = None
+    if 'current_sport' not in st.session_state:
+        st.session_state.current_sport = "MLB"
+
+# Call initialization
+initialize_session_state()
+```
+
+### Form Handling
+```python
+# Use forms for complex inputs
+with st.form("optimization_settings"):
+    num_lineups = st.number_input("Number of Lineups", min_value=1, max_value=1000, value=300)
+    max_salary = st.number_input("Max Salary", min_value=10000, max_value=100000, value=35000)
+    preserve_stacks = st.checkbox("Preserve Stacks", value=True)
+    
+    submitted = st.form_submit_button("🚀 Run Optimization")
+    
+    if submitted:
+        # Process form data
+        run_optimization(num_lineups, max_salary, preserve_stacks)
+```
+
+## 🎯 Performance Optimization
+
+### Caching
+```python
+@st.cache_data
+def load_data(file_path):
+    """Cache data loading operations"""
+    return pd.read_csv(file_path)
+
+@st.cache_resource
+def create_optimizer():
+    """Cache resource-intensive objects"""
+    return MLBOptimizer()
+```
+
+### Efficient Data Processing
+```python
+# Use st.empty() for dynamic content
+progress_placeholder = st.empty()
+results_placeholder = st.empty()
+
+# Update placeholders instead of recreating
+progress_placeholder.info("🔄 Processing...")
+# ... processing ...
+progress_placeholder.success("✅ Complete!")
+results_placeholder.dataframe(results)
+```
+
+## 🚀 Deployment Best Practices
+
+### Requirements Management
+```python
+# requirements.txt should include exact versions
+streamlit==1.47.0
+pandas==2.3.1
+numpy==2.0.2
+plotly==6.2.0
+requests==2.32.4
+fastapi==0.116.1
+uvicorn==0.35.0
+python-multipart==0.0.20
+```
+
+### Configuration Management
+```python
+# Use .streamlit/config.toml for configuration
+[server]
+port = 8501
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+
+[browser]
+gatherUsageStats = false
+```
+
+## 🔧 Error Handling
+
+### Graceful Error Handling
+```python
+def safe_file_upload():
+    """Safe file upload with error handling"""
+    try:
+        uploaded_file = st.file_uploader("Upload CSV", type=['csv'])
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+            return df
+    except Exception as e:
+        st.error(f"❌ Error uploading file: {str(e)}")
+        return None
+    return None
+
+def safe_optimization(data, config):
+    """Safe optimization with error handling"""
+    try:
+        with st.spinner("🔄 Running optimization..."):
+            results = optimizer.optimize(data, config)
+            return results
+    except Exception as e:
+        st.error(f"❌ Optimization failed: {str(e)}")
+        return None
+```
+
+## 📱 Responsive Design
+
+### Mobile-Friendly Layout
+```python
+# Use responsive columns
+if st.checkbox("Show advanced options"):
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.number_input("Setting 1")
+    with col2:
+        st.number_input("Setting 2")
+else:
+    st.number_input("Basic Setting")
+```
+
+## 🧪 Testing Guidelines
+
+### Unit Testing
+```python
+# Test components in isolation
+def test_file_upload():
+    # Mock file upload
+    # Test validation
+    # Test error handling
+    pass
+
+def test_optimization():
+    # Test with sample data
+    # Verify results format
+    # Test error conditions
+    pass
+```
+
+## 📈 Monitoring and Logging
+
+### Logging Setup
+```python
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Use in app
+def log_optimization_start(sport, config):
+    logger.info(f"Starting {sport} optimization with config: {config}")
+```
+
+## 🎨 UI/UX Guidelines
+
+### Consistent Styling
+- Use consistent color scheme throughout
+- Maintain proper spacing and alignment
+- Use appropriate icons and emojis
+- Provide clear feedback for user actions
+
+### User Experience
+- Show loading states for long operations
+- Provide clear error messages
+- Use progressive disclosure for complex features
+- Include helpful tooltips and documentation
+
+### Accessibility
+- Use semantic HTML elements
+- Provide alt text for images
+- Ensure sufficient color contrast
+- Support keyboard navigation
+
+## 🔄 Development Workflow
+
+### Local Development
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run development server
+streamlit run frontend/main.py
+
+# Run with specific port
+streamlit run frontend/main.py --server.port 8501
+
+# Run in headless mode
+streamlit run frontend/main.py --server.headless true
+```
+
+### Code Quality
+- Follow PEP 8 style guidelines
+- Use type hints where appropriate
+- Write docstrings for all functions
+- Keep functions small and focused
+- Use meaningful variable names
+
+## 📚 Resources
+
+### Official Documentation
+- [Streamlit Documentation](https://docs.streamlit.io/)
+- [Streamlit API Reference](https://docs.streamlit.io/library/api-reference)
+- [Streamlit Community Cloud](https://docs.streamlit.io/streamlit-community-cloud)
+
+### Best Practices
+- [Streamlit Best Practices](https://docs.streamlit.io/knowledge-base)
+- [Streamlit Cheat Sheet](https://docs.streamlit.io/library/cheatsheet)
+
+---
+
+**Remember**: Always prioritize user experience, performance, and maintainability when building Streamlit applications.
+description:
+globs:
+alwaysApply: false
+---
